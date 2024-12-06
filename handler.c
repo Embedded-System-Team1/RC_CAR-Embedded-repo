@@ -7,6 +7,8 @@
 
 #include <string.h>
 #include <mqueue.h>
+#include "dto.c"
+
 #define BAUD_RATE 115200
 #define MESSAGE_QUEUE_NAME "/rc_car_queue"
 static const char* UART1_DEV = "/dev/ttyAMA1";
@@ -24,6 +26,7 @@ unsigned char serialRead(const int fd) //1Byte 데이터를 수신하는 함수
 	
 	return x; //읽어온 데이터 반환
 }
+
 
 
 void* thread_bluetooth_connection(void* arg){
@@ -54,8 +57,10 @@ void* thread_bluetooth_connection(void* arg){
                 continue;
             }
 
-            buffer[idx] = '\0'; // 문자열 끝 추가
-            printf("[Handler] bluetooth received: %s\n", buffer);
+            // 유효한 JSON 데이터만 남기기
+            remove_invalid_json_characters(buffer);
+
+            printf("[Handler] cleaned received: %s\n", buffer);
 
             // 메시지 큐로 전송
             if (mq_send(mq, buffer, strlen(buffer), 0) == -1) {
@@ -71,6 +76,7 @@ void* thread_bluetooth_connection(void* arg){
     mq_close(mq);
     return NULL;
 }
+
 
 
 
