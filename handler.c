@@ -7,7 +7,6 @@
 
 #include <string.h>
 #include <mqueue.h>
-#include "dto.c"
 
 #define BAUD_RATE 115200
 #define MESSAGE_QUEUE_NAME "/rc_car_queue"
@@ -27,6 +26,37 @@ unsigned char serialRead(const int fd) //1Byte 데이터를 수신하는 함수
 	return x; //읽어온 데이터 반환
 }
 
+
+void remove_invalid_json_characters(char* buffer) {
+    int start_idx = -1, end_idx = -1;
+    int i, len = strlen(buffer);
+    
+    // 시작 괄호 '{' 찾기
+    for (i = 0; i < len; i++) {
+        if (buffer[i] == '{') {
+            start_idx = i;
+            break;
+        }
+    }
+
+    // 끝 괄호 '}' 찾기
+    for (i = len - 1; i >= 0; i--) {
+        if (buffer[i] == '}') {
+            end_idx = i;
+            break;
+        }
+    }
+
+    // 유효한 JSON 데이터를 찾은 경우
+    if (start_idx != -1 && end_idx != -1 && end_idx > start_idx) {
+        // 시작과 끝 인덱스 사이의 문자열을 복사
+        memmove(buffer, buffer + start_idx, end_idx - start_idx + 1);
+        buffer[end_idx - start_idx + 1] = '\0';  // 문자열 끝 추가
+    } else {
+        // 유효한 JSON 문자열이 없는 경우 빈 문자열 처리
+        buffer[0] = '\0';
+    }
+}
 
 
 void* thread_bluetooth_connection(void* arg){
