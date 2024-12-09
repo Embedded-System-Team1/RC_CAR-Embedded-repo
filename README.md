@@ -31,10 +31,49 @@ WebSocket API와 Bluetooth 모듈을 통해 사용자가 실시간으로 RC 카�
 - Thread Pool: 병렬 작업 처리로 자원 소모를 최소화하며 시스템 안정성을 높임.
 - Message Queue: 비동기 메시지 전달로 데이터의 무결성을 유지함.
 
+---
 
+### 🛠️임베디드 소프트웨어 구성
+![image](https://github.com/user-attachments/assets/816f6019-7554-4db1-876e-a28754b435e0)
 
-### 🛠️임베디드 소프트웨어 흐름도 및 구성도
+**1. main.c**
+   프로그램의 시작점이자 root process
+   
+   프로그램이 시작되면 child process 로  
+   controller.c 와 handler.c를 fork spawn을 실행합니다.
 
+**2. handler.c**
+
+   RC카를 직접 제어하거나 웹 통신 블루투스 통신 등등
+   RC카 제어를 위한 connection 을 핸들링 함
+   
+   connection에서 보내진 데이터를 IPC로 보내는 파이프라인 역할을 함
+
+**3. controller.c**
+
+   메세지 큐의 데이터를 polling 하여 device 장치를 제어하도록 실행함
+
+**4. device_adaptor.c** 
+
+   connection에서 보낸 데이터를 parsing 하여 적합한 device worker thread 에 동작하게 한다.
+   device_adaptor 에 제공된 규악을 device 실행 메서드와 구조체 , 문자열 구조체 변환 메서드를 커스텀하면
+   해당 device를 실행할 수 있다.
+
+**5. worker thread pool** 
+
+   connection 과 device 제어는 비동기 식 실행을 위해 멀티 스레딩을 채택함
+   장치 제어와 connection 은 real time 으로 작업이 실행되기 때문에 작업 단위마다 thread를 생성-종료 구조는 비적합
+   controller 와 handler 프로세스가 실행될 때 thread 를 생성해놓고 thread pool 로 적재하여 리소스를 효율화 시킴
+
+**6. concurrency control (connection multi thread)**
+
+   connection 끼리 데이터 전송에서 한 메시지 단위로 동기화가 보장되어야 한다.
+   
+   각 connection 의 데이터 전송 transaction 의 동기화를 보장한다.
+   
+   handler.c 에서 mutex_lock 을 이용하여 동기화를 보장한다.
+
+ 
 
 
 
