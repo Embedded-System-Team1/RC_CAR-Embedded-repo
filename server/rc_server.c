@@ -16,6 +16,10 @@ static int callback_server(struct lws *wsi, enum lws_callback_reasons reason,
               printf("{ id: 1, speed: 50, direction: 1 }\n");
             } else if (strncmp((char *)in, "FORWARD", len) == 0) {
               printf("{ id: 1, speed: 50, direction: 1 }\n");
+            } else if (strncmp((char *)in, "BACKWARD_LEFT", len) == 0) {
+              printf("{ id: 1, speed: 50, direction: 0 }\n");
+            } else if (strncmp((char *)in, "BACKWARD_RIGHT", len) == 0) {
+              printf("{ id: 1, spped: 50, direction: 0 }\n");
             } else if (strncmp((char *)in, "BACKWARD", len) == 0) {
               printf("{ id: 1, speed: 50, direction: 0 }\n");
             } else if (strncmp((char *)in, "LEFT", len) == 0) {
