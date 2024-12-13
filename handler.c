@@ -107,7 +107,7 @@ void* thread_bluetooth_connection(void* arg){
     return NULL;
 }
 
-void execute_rc_server() {
+void* thread_web_connection() {
   pid_t pid = fork();
 
   if (pid < 0) {
@@ -163,11 +163,10 @@ int fork_handler()
     int fd_serial;
     init(&fd_serial);
 
-    execute_rc_server();
-
-    pthread_t thread_blue,thread_test;
+    pthread_t thread_blue, thread_web, thread_test;
     pthread_mutex_init(&mid, NULL); // 뮤텍스 초기화
     pthread_create(&thread_blue,NULL,thread_bluetooth_connection,(void*)&fd_serial);
+    pthread_create(&thread_web, NULL, thread_web_connection, NULL);
     pthread_create(&thread_test,NULL,thread_test_connection,NULL);
 
 	pthread_join(thread_blue, NULL); //생산자 쓰레드 종료 대기
