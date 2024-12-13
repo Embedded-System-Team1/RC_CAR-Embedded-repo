@@ -1,33 +1,103 @@
 #include <libwebsockets.h>
 #include <string.h>
 #include <stdio.h>
+#include <mqueue.h>
+
+#define MESSAGE_QUEUE_NAME "/rc_car_queue"
+
+void remove_invalid_json_characters(char* buffer) {
+    int start_idx = -1, end_idx = -1;
+    int i, len = strlen(buffer);
+    
+    // 시작 괄호 '{' 찾기
+    for (i = 0; i < len; i++) {
+        if (buffer[i] == '{') {
+            start_idx = i;
+            break;
+        }
+    }
+
+    // 끝 괄호 '}' 찾기
+    for (i = len - 1; i >= 0; i--) {
+        if (buffer[i] == '}') {
+            end_idx = i;
+            break;
+        }
+    }
+
+    // 유효한 JSON 데이터를 찾은 경우
+    if (start_idx != -1 && end_idx != -1 && end_idx > start_idx) {
+        // 시작과 끝 인덱스 사이의 문자열을 복사
+        memmove(buffer, buffer + start_idx, end_idx - start_idx + 1);
+        buffer[end_idx - start_idx + 1] = '\0';  // 문자열 끝 추가
+    } else {
+        // 유효한 JSON 문자열이 없는 경우 빈 문자열 처리
+        buffer[0] = '\0';
+    }
+}
+
+void mq_push(char* buffer) {
+  mqd_t mq;
+
+  mq = mq_open(MESSAGE_QUEUE_NAME, O_WRONLY);
+  if (mq == (mqd_t)-1) {
+      perror("[Handler] Failed to open message queue");
+      return;
+  }
+
+   // 메시지 큐 오픈
+  mq = mq_open(MESSAGE_QUEUE_NAME, O_WRONLY);
+
+  if(strlen(buffer) > 256) {
+      printf("[Handler] data's size is too big\n");
+      memset(buffer, 0, sizeof(buffer)); // buf 초기화
+      return;
+  }
+
+  remove_invalid_json_characters(buffer);
+  // 메시지 큐로 전송
+  if (mq_send(mq, buffer, strlen(buffer), 0) == -1) {
+      perror("[Handler] Failed to send message");
+  } else {
+      printf("[Handler] sent: %s\n", buffer);
+  }
+  memset(buffer, 0, sizeof(buffer));
+}
 
 // 클라이언트 메시지 처리 콜백
-static int callback_server(struct lws *wsi, enum lws_callback_reasons reason,
-                           void *user, void *in, size_t len) {
+static int callback_server(struct lws *wsi, enum lws_callback_reasons reason, void *user, void *in, size_t len) {
     switch (reason) {
         case LWS_CALLBACK_RECEIVE:
             // 메시지를 받았을 때
             printf("Received: %.*s\n", (int)len, (char *)in);
 
-            if (strncmp((char *)in, "FORWARD_LEFT", len) == 0) {
-              printf("{ id: 1, speed: 50, direction: 1 }\n");
+            if (strncmp((char *)in, "FORWARD", len) == 0) {
+              char buffer[256] = "{\"id\": 1, \"speed\": 51, \"direction\": 1}\n";
+              mq_push(buffer);
+            } else if (strncmp((char *)in, "FORWARD_LEFT", len) == 0) {
+              char buffer[256] = "{\"id\": 2, \"speed\": 51, \"direction\": 1}\n";
+              mq_push(buffer);
             } else if (strncmp((char *)in, "FORWARD_RIGHT", len) == 0) {
-              printf("{ id: 1, speed: 50, direction: 1 }\n");
-            } else if (strncmp((char *)in, "FORWARD", len) == 0) {
-              printf("{ id: 1, speed: 50, direction: 1 }\n");
-            } else if (strncmp((char *)in, "BACKWARD_LEFT", len) == 0) {
-              printf("{ id: 1, speed: 50, direction: 0 }\n");
-            } else if (strncmp((char *)in, "BACKWARD_RIGHT", len) == 0) {
-              printf("{ id: 1, spped: 50, direction: 0 }\n");
+              char buffer[256] = "{\"id\": 3, \"speed\": 51, \"direction\": 1}\n";
+              mq_push(buffer);
             } else if (strncmp((char *)in, "BACKWARD", len) == 0) {
-              printf("{ id: 1, speed: 50, direction: 0 }\n");
+              char buffer[256] = "{\"id\": 4, \"speed\": 51, \"direction\": 1}\n";
+              mq_push(buffer);
+            } else if (strncmp((char *)in, "BACKWARD_LEFT", len) == 0) {
+              char buffer[256] = "{\"id\": 5, \"speed\": 51, \"direction\": 1}\n";
+              mq_push(buffer);
+            } else if (strncmp((char *)in, "BACKWARD_RIGHT", len) == 0) {
+              char buffer[256] = "{\"id\": 6, \"speed\": 51, \"direction\": 1}\n";
+              mq_push(buffer);
             } else if (strncmp((char *)in, "LEFT", len) == 0) {
-              printf("{ id: 2, speed: 50, direction: 1 }\n");
+              char buffer[256] = "{\"id\": 7, \"speed\": 51, \"direction\": 1}\n";
+              mq_push(buffer);
             } else if (strncmp((char *)in, "RIGHT", len) == 0) {
-              printf("{ id: 2, speed: 50, direction: 1 }\n");
+              char buffer[256] = "{\"id\": 8, \"speed\": 51, \"direction\": 1}\n";
+              mq_push(buffer);
             } else if (strncmp((char *)in, "STOP", len) == 0) {
-              printf("{ id: 1, speed: 0, direction: 0 }\n");
+              char buffer[256] = "{\"id\": 9, \"speed\": 51, \"direction\": 1}\n";
+              mq_push(buffer);
             }
             break;
 
