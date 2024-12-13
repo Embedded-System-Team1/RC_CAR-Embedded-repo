@@ -107,7 +107,23 @@ void* thread_bluetooth_connection(void* arg){
     return NULL;
 }
 
+void execute_rc_server() {
+  pid_t pid = fork();
 
+  if (pid < 0) {
+    perror("[Handler] Failed to fork process for rc_server");
+    exit(EXIT_FAILURE);
+  }
+
+  if (pid == 0) {
+    // 자식 프로세스에서 rc_server 실행
+    execl("./rc_server", "rc_server", NULL);
+
+    // execl 실패 시 처리
+    perror("[Handler] Failed to execute rc_server");
+    exit(EXIT_FAILURE);
+  }
+}
 
 
 void* thread_test_connection(void* arg){
@@ -146,6 +162,8 @@ int fork_handler()
 
     int fd_serial;
     init(&fd_serial);
+
+    execute_rc_server();
 
     pthread_t thread_blue,thread_test;
     pthread_mutex_init(&mid, NULL); // 뮤텍스 초기화
