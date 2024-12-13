@@ -111,8 +111,11 @@ static int callback_server(struct lws *wsi, enum lws_callback_reasons reason, vo
             } else if (strncmp((char *)in, "HORN", len) == 0) {
               char buffer[256] = "{\"id\": 9, \"speed\": 51, \"direction\": 1}\n";
               mq_push(buffer);
-            } else if (strncmp((char *)in, "STOP", len) == 0) {
+            } else if (strncmp((char *)in, "TOGGLE_CEILING", len) == 0) {
               char buffer[256] = "{\"id\": 10, \"speed\": 51, \"direction\": 1}\n";
+              mq_push(buffer);
+            } else if (strncmp((char *)in, "STOP", len) == 0) {
+              char buffer[256] = "{\"id\": 11, \"speed\": 51, \"direction\": 1}\n";
               mq_push(buffer);
             }
             break;
