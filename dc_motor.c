@@ -7,7 +7,8 @@
 typedef struct {
     int id; // 필수 값
     int speed;
-    int direction;
+    int directionX;
+    int directionY;
 } DCMotorCommand;
 
 // JSON 문자열을 DC 모터 명령 구조체로 변환
@@ -38,7 +39,8 @@ void* parse_dc_motor_message(const char* json_str) {
     // JSON 데이터 추출
     json_t* id = json_object_get(root, "id");
     json_t* speed = json_object_get(root, "speed");
-    json_t* direction = json_object_get(root, "direction");
+    json_t* directionX = json_object_get(root, "directionX");
+    json_t* directionY = json_object_get(root, "directionY");
 
 
     if (json_is_integer(id)) {
@@ -49,6 +51,7 @@ void* parse_dc_motor_message(const char* json_str) {
         json_decref(root);
         return NULL;
     }
+
     if (json_is_integer(speed)) {
         command->speed = json_integer_value(speed);
     } else {
@@ -58,10 +61,19 @@ void* parse_dc_motor_message(const char* json_str) {
         return NULL;
     }
 
-    if (json_is_integer(direction)) {
-        command->direction = json_integer_value(direction);
+    if (json_is_integer(directionX)) {
+        command->directionX = json_integer_value(directionX);
     } else {
-        fprintf(stderr, "[Parser] Missing or invalid 'direction' field\n");
+        fprintf(stderr, "[Parser] Missing or invalid 'directionX' field\n");
+        free(command);
+        json_decref(root);
+        return NULL;
+    }
+
+    if (json_is_integer(directionY)) {
+        command->directionY = json_integer_value(directionY);
+    } else {
+        fprintf(stderr, "[Parser] Missing or invalid 'directionY' field\n");
         free(command);
         json_decref(root);
         return NULL;
@@ -73,6 +85,6 @@ void* parse_dc_motor_message(const char* json_str) {
 
 void handle_dc_motor_command(void* command) {
     DCMotorCommand* dc_command = (DCMotorCommand*)command;
-    printf("DC Motor - Speed: %d, Direction: %d\n", dc_command->speed, dc_command->direction);
+    printf("DC Motor - Speed: %d, Direction: X-%d, Y-%d\n", dc_command->speed, dc_command->directionX, dc_command->directionY);
 }
 
