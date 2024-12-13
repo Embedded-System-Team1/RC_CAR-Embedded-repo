@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <mqueue.h>
 
+#include "../handler_mutex.c"
+
 #define MESSAGE_QUEUE_NAME "/rc_car_queue"
 
 void remove_invalid_json_characters(char* buffer) {
@@ -67,8 +69,19 @@ void mq_push(char* buffer) {
 // 클라이언트 메시지 처리 콜백
 static int callback_server(struct lws *wsi, enum lws_callback_reasons reason, void *user, void *in, size_t len) {
     switch (reason) {
+        // 클라이언트가 연결되었을 때
+        case LWS_CALLBACK_ESTABLISHED:
+            printf("TCP 소켓 연결됨\n");
+            pthread_mutex_lock(&mid);
+            break;
+        // 클라이언트 연결이 끊겼을 때
+        case LWS_CALLBACK_CLOSED:
+            printf("TCP 소켓 연결 해제됨\n");
+            pthread_mutex_unlock(&mid);
+            // 연결 종료 시 필요한 작업을 여기에 추가
+            break;
+        // 메시지를 받았을 때
         case LWS_CALLBACK_RECEIVE:
-            // 메시지를 받았을 때
             printf("Received: %.*s\n", (int)len, (char *)in);
 
             if (strncmp((char *)in, "FORWARD", len) == 0) {
