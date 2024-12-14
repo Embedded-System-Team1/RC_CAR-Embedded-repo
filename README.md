@@ -187,7 +187,7 @@ sudo ./main
         전체적인 프로젝트 구성 설계, 제어 소프트웨어와 모터 사이의 파이프라인 개발
       </td>
    </tr>
-     <tr>
+   <tr>
       <td align="center">
         <a href="https://github.com/Jinoko01">
           <img src="https://avatars.githubusercontent.com/u/126740959?v=4" width="100" height="80" alt=""/>
@@ -198,7 +198,19 @@ sudo ./main
       <td>
         웹과 라즈베리파이 간 웹소켓 통신 구현, RC카 dc모터 조립
       </td>
-    </tr>
+   </tr>
+   <tr>
+      <td align="center">
+        <a href="https://github.com/combikms">
+          <img src="https://avatars.githubusercontent.com/u/156290648?v=4" width="100" height="80" alt=""/>
+          <br/>
+          <sub><b>강인석</b></sub>
+        </a>
+      </td>
+      <td>
+        라즈베리파이5와 스마트폰 간 블루투스 통신을 위한 모바일 애플리케이션 개발, 부가 기능 확장
+      </td>
+   </tr>
   </table>
 </div>
 <br>
