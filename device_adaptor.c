@@ -13,7 +13,6 @@
 typedef struct {
     void (*handle_command)(void* command); // 명령 처리 함수
     void* (*parse_message)(const char* message); // 메시지 -> 구조체 변환 함수
-    void (*pin_mapping)();
 } MotorHandler;
 
 MotorHandler motor_handlers[MAX_MOTOR_TYPES] = {0};
@@ -66,4 +65,5 @@ void register_custom_device_handler() {
         .parse_message = parse_horn_message,
     };
     register_motor_handler(1, horn_handler); // 모터 ID 1에 등록
+    HornSetup();
 }
