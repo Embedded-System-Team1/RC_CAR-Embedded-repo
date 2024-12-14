@@ -5,8 +5,6 @@
 #include "dc_motor.c" // DC 모터 명령 처리 함수 포함
 #include "horn.c"     // Horn 명령 처리 함수 포함
 
-#include "horn.c"     // Horn 명령 처리 함수 포함
-
 // -- DC 모터 장치 추가 및 기능 구현 커스텀 예시 --
 // 핸들러 등록 테이블
 #define MAX_MOTOR_TYPES 10
@@ -52,8 +50,6 @@ void handle_motor_command(int motor_id, const char* message) {
 
 // 핸들러 등록 함수
 void register_custom_device_handler() {
-    wiringPiSetup();
-
     // DC 모터 핸들러 생성
     MotorHandler dc_motor_handler = {
         .handle_command = handle_dc_motor_command,
