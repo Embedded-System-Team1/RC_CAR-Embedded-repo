@@ -1,6 +1,10 @@
 #include <stdio.h>
 #include "DCMotor.c"
 
+void motorStop() {
+    controlMotor(0, 0, 0);
+}
+
 void moveFront(int sec) 
 {
     controlMotor(0, DCMOTOR_SPWM_RANGE/2, DCMOTOR_SPWM_RANGE/2);
