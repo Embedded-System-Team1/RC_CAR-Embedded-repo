@@ -54,9 +54,9 @@ void controlCar(int speed, int turn, int forward)
     speed = speed < 0 ? 0 : speed;
 
     if (turn < 0) {
-        controlMotor(forward, speed, 1);
+        controlMotor(forward, speed, speed-300);
     } else if (turn > 0) {
-        controlMotor(forward, 1, speed);
+        controlMotor(forward, speed-300, speed);
     } else {
         controlMotor(forward, speed, speed);
     }
