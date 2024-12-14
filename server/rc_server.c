@@ -142,12 +142,17 @@ static int callback_server(struct lws *wsi, enum lws_callback_reasons reason, vo
             } else if (strncmp((char *)in, "HORN", len) == 0) {
               char buffer[256] = "{\"id\": 1, \"hornState\": 1}\n";
               mq_push(buffer);
+            } else if (strncmp((char *)in, "TOGGLE_LIGHT", len) == 0) {
+              // TODO: 구조체 만들어지면 고칠 것
+              char buffer[256] = "{\"id\": 2, \"hornState\": 1}\n";
+              mq_push(buffer);
             } else if (strncmp((char *)in, "TOGGLE_CEILING", len) == 0) {
-              char buffer[256] = "{\"id\": 10, \"speed\": 51, \"direction\": 1}\n";
+              // TODO: 구조체 만들어지면 고칠 것
+              char buffer[256] = "{\"id\": 3, \"speed\": 51, \"direction\": 1}\n";
               mq_push(buffer);
             } else if (strncmp((char *)in, "STOP", len) == 0) {
               forward = 2;
-              char buffer[256] = "{\"id\": 11, \"speed\": 0, \"direction\": 1}\n";
+              char buffer[256] = "{\"id\": 0, \"speed\": 0, \"directionX\": 0, \"directionY\": 0}\n";
               mq_push(buffer);
             }
             break;
