@@ -139,7 +139,7 @@ static int callback_server(struct lws *wsi, enum lws_callback_reasons reason, vo
             } else if (strncmp((char *)in, "HORN", len) == 0) {
               char buffer[256] = "{\"id\": 1, \"hornState\": 1}\n";
               mq_push(buffer);
-            } else if (strncmp((char *)in, "STOP_HORN", len) == 0) {
+            } else if (strncmp((char *)in, "END_HORN", len) == 0) {
               char buffer[256] = "{\"id\": 1, \"hornState\": 0}\n";
               mq_push(buffer);
             } else if (strncmp((char *)in, "TOGGLE_LIGHT", len) == 0) {
