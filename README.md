@@ -153,9 +153,14 @@ void register_custom_device_handler() { // 구현되어 있는 함수에 다음 
  gcc -o controller controller.c -lpthread -lwiringPi -ljansson
 ```
 
+```bash
+ gcc -o rc_server ./server/rc_server.c -lwebsockets -lrt
+```
+
 #### 실행
 
 ```bash
+gcc -o rc_server ./server/rc_server.c -lwebsockets -lrt
 gcc -o controller controller.c -lpthread -lwiringPi -ljansson
 gcc -o handler handler.c -lpthread -lwiringPi -ljansson
 sudo ./main
@@ -180,6 +185,83 @@ sudo ./main
       <td>
         전체적인 프로젝트 구성 설계, 제어 소프트웨어와 모터 사이의 파이프라인 개발
       </td>
+       <td align="center">
+        <a href="https://github.com/Jinoko01">
+          <img src="https://avatars.githubusercontent.com/u/126740959?v=4" width="100" height="80" alt=""/>
+          <br/>
+          <sub><b>황용진</b></sub>
+        </a>
+      </td>
+      <td>
+        웹과 라즈베리파이 간 웹소켓          servo_command->duration);
+}
+```
+#### 3. **모터 핸들러**를 프레임워크에 등록합니다.
+- device_adaptor.c 파일에 해당 함수에 다음과 같은 코드를 추가합니다
+
+```c
+#include "survo.c" // device_adaptor.c 파일에 추가 
+
+void register_custom_device_handler() { // 구현되어 있는 함수에 다음 코드를 추가
+    MotorHandler servo_motor_handler = {
+        .handle_command = handle_servo_motor_command,
+        .parse_message = parse_servo_motor_message,
+    };
+    register_motor_handler(1, servo_motor_handler); // 모터 ID 1에 핸들러 등록
+}
+
+}
+```
+
+#### 컴파일
+
+```bash
+ gcc -o controller controller.c -lpthread -lwiringPi -ljansson
+```
+
+```bash
+ gcc -o rc_server ./server/rc_server.c -lwebsockets -lrt
+```
+
+#### 실행
+
+```bash
+gcc -o rc_server ./server/rc_server.c -lwebsockets -lrt
+gcc -o controller controller.c -lpthread -lwiringPi -ljansson
+gcc -o handler handler.c -lpthread -lwiringPi -ljansson
+sudo ./main
+```
+
+### 👬팀원 소개 및 역할
+
+<div align="center">
+  <table>
+    <tr>
+      <th>Profile</th>
+      <th>Role</th>
+    </tr>
+    <tr>
+      <td align="center">
+        <a href="https://github.com/kang20">
+          <img src="https://avatars.githubusercontent.com/u/75325326?v=4" width="100" height="80" alt=""/>
+          <br/>
+          <sub><b>강민기</b></sub>
+        </a>
+      </td>
+      <td>
+        전체적인 프로젝트 구성 설계, 제어 소프트웨어와 모터 사이의 파이프라인 개발
+      </td>
+       <td align="center">
+        <a href="https://github.com/Jinoko01">
+          <img src="https://avatars.githubusercontent.com/u/126740959?v=4" width="100" height="80" alt=""/>
+          <br/>
+          <sub><b>황용진</b></sub>
+        </a>
+      </td>
+      <td>
+        웹과 라즈베리파이 간 웹소켓 통신 구현, RC카 dc모터 조립
+      </td>
+    </tr>
   </table>
 </div>
 <br>
