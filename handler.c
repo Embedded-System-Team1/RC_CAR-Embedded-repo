@@ -8,14 +8,13 @@
 #include <string.h>
 #include <mqueue.h>
 
+#include "handler_mutex.c"
+
 #define BAUD_RATE 115200
 #define MESSAGE_QUEUE_NAME "/rc_car_queue"
 static const char* UART1_DEV = "/dev/ttyAMA1";
 
-
 int connection_flug = 0;
-
-pthread_mutex_t mid;
 
 unsigned char serialRead(const int fd) //1Byte 데이터를 수신하는 함수
 {
@@ -108,6 +107,7 @@ void* thread_bluetooth_connection(void* arg){
 }
 
 void* thread_web_connection() {
+  pthread_mutex_lock(&mid);
   pid_t pid = fork();
 
   if (pid < 0) {
@@ -123,6 +123,7 @@ void* thread_web_connection() {
     perror("[Handler] Failed to execute rc_server");
     exit(EXIT_FAILURE);
   }
+  pthread_mutex_unlock(&mid);
 }
 
 
