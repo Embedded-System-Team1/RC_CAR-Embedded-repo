@@ -117,7 +117,7 @@ static int callback_server(struct lws *wsi, enum lws_callback_reasons reason, vo
             } else if (strncmp((char *)in, "FORWARD_LEFT", len) == 0) {
               char buffer[256];
               updateForwardSpeed();
-              sprintf(buffer, "{\"id\": 0, \"speed\": %d \"directionX\": -1 \"directionY\": 0}\n", speed);
+              sprintf(buffer, "{\"id\": 0, \"speed\": %d, \"directionX\": -1, \"directionY\": 0}\n", speed);
               mq_push(buffer);
             } else if (strncmp((char *)in, "FORWARD_RIGHT", len) == 0) {
               char buffer[256];
