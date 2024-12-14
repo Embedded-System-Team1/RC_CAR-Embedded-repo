@@ -47,9 +47,6 @@ void mq_push(char* buffer) {
       return;
   }
 
-   // 메시지 큐 오픈
-  mq = mq_open(MESSAGE_QUEUE_NAME, O_WRONLY);
-
   if(strlen(buffer) > 256) {
       printf("[Handler] data's size is too big\n");
       memset(buffer, 0, sizeof(buffer)); // buf 초기화
