@@ -13,6 +13,7 @@
 typedef struct {
     void (*handle_command)(void* command); // 명령 처리 함수
     void* (*parse_message)(const char* message); // 메시지 -> 구조체 변환 함수
+    void (*pin_mapping)();
 } MotorHandler;
 
 MotorHandler motor_handlers[MAX_MOTOR_TYPES] = {0};
