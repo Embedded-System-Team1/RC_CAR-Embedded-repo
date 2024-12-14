@@ -1,55 +1,66 @@
 #ifndef DCMOTOR_H
 #define DCMOTOR_H
 #include <wiringPi.h>
+#include <softPwm.h>
 
 // GPIO 핀 매핑
-#define M_IN1 4  // IN1 ------- GPIO 4
-#define M_IN2 5  // IN2 ------- GPIO 5
-#define M_IN3 13 // IN3 ------- GPIO 13
-#define M_IN4 12 // IN4 ------- GPIO 12
+#define M_IN1 13 // IN3 ------- GPIO 13
+#define M_IN2 12 // IN4 ------- GPIO 12
+#define M_IN3 4  // IN1 ------- GPIO 4
+#define M_IN4 5  // IN2 ------- GPIO 5
+
+#define DCMOTOR_SPWM_RANGE 1024
 
 void DCMotorSetup()
 {
     pinMode(M_IN1, OUTPUT);
+    softPwmCreate(M_IN1, 0, DCMOTOR_SPWM_RANGE);
+
     pinMode(M_IN2, OUTPUT);
+    softPwmCreate(M_IN2, 0, DCMOTOR_SPWM_RANGE);
+
     pinMode(M_IN3, OUTPUT);
+    softPwmCreate(M_IN3, 0, DCMOTOR_SPWM_RANGE);
+
     pinMode(M_IN4, OUTPUT);
+    softPwmCreate(M_IN4, 0, DCMOTOR_SPWM_RANGE);
 }
 
-void motorControl(int motor_dir, int speed)
+void controlMotor(int motor_dir, int Aspeed, int Bspeed)
 {
-    // 모터 A 제어
-    digitalWrite(M_IN1, !motor_dir);
-    digitalWrite(M_IN2, motor_dir);
-
-    // 모터 B 제어
-    digitalWrite(M_IN3, !motor_dir);
-    digitalWrite(M_IN4, motor_dir);
+    if (motor_dir) {
+        // 모터 A 제어
+        softPwmWrite(M_IN1, Aspeed);
+        softPwmWrite(M_IN2, 0);
+        
+        // 모터 B 제어
+        softPwmWrite(M_IN3, Bspeed);
+        softPwmWrite(M_IN4, 0);
+    } else {
+        // 모터 A 제어
+        softPwmWrite(M_IN1, 0);
+        softPwmWrite(M_IN2, Aspeed);
+        
+        // 모터 B 제어
+        softPwmWrite(M_IN3, 0);
+        softPwmWrite(M_IN4, Bspeed);
+    }
 }
 
-void motorStop() 
+// turn(왼쪽:-1, 직진:0, 오른쪽: 1), forward(전진: 0, 후진: 1)
+void controlCar(int speed, int turn, int forward) 
 {
-    // 모터 A 제어
-    digitalWrite(M_IN1, 0);
-    digitalWrite(M_IN2, 0);
+    speed = speed > 1024 ? 1024 : speed;
+    speed = speed < 0 ? 0 : speed;
 
-    // 모터 B 제어
-    digitalWrite(M_IN3, 0);
-    digitalWrite(M_IN4, 0);
-}
-
-void moveFront(int sec) 
-{
-    motorControl(1, 100);
-    delay(1000 * sec);
-    motorStop();
-}
-
-void moveBack(int sec) 
-{
-    motorControl(0, 100);
-    delay(1000 * sec);
-    motorStop();
+    if (turn < 0) {
+        controlMotor(forward, speed, 1);
+    } else if (turn > 0) {
+        controlMotor(forward, 1, speed);
+    } else {
+        controlMotor(forward, speed, speed);
+    }
+    delay(50);
 }
 
 #endif
