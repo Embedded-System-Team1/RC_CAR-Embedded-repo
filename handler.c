@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <wiringPi.h>
 #include <wiringSerial.h>
+#include <spawn.h>
 
 #include <string.h>
 #include <mqueue.h>
@@ -13,6 +14,8 @@
 #define BAUD_RATE 115200
 #define MESSAGE_QUEUE_NAME "/rc_car_queue"
 static const char* UART1_DEV = "/dev/ttyAMA1";
+
+extern char **environ;
 
 int connection_flug = 0;
 
@@ -107,23 +110,12 @@ void* thread_bluetooth_connection(void* arg){
 }
 
 void* thread_web_connection() {
-  pthread_mutex_lock(&mid);
-  pid_t pid = fork();
-
-  if (pid < 0) {
-    perror("[Handler] Failed to fork process for rc_server");
-    exit(EXIT_FAILURE);
+  pid_t pid;
+  char *r_argv[] = {"sudo", "./handler", NULL};
+  if (posix_spawn(&pid, "./rc_server", NULL, NULL, r_argv, environ) != 0) {
+      perror("posix_spawn handler failed");
+      return NULL;
   }
-
-  if (pid == 0) {
-    // 자식 프로세스에서 rc_server 실행
-    execl("./rc_server", "rc_server", NULL);
-
-    // execl 실패 시 처리
-    perror("[Handler] Failed to execute rc_server");
-    exit(EXIT_FAILURE);
-  }
-  pthread_mutex_unlock(&mid);
 }
 
 

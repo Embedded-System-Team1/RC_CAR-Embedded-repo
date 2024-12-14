@@ -66,7 +66,7 @@ void mq_push(char* buffer) {
   memset(buffer, 0, sizeof(buffer));
 }
 
-int speed = 0;
+int speed = 400;
 int forward = 1;
 
 void updateForwardSpeed() {
