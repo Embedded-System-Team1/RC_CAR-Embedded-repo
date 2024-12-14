@@ -11,6 +11,8 @@
 
 #define DCMOTOR_SPWM_RANGE 1024
 
+#define SPEED_DIFFERENCE 600
+
 void DCMotorSetup()
 {
     pinMode(M_IN1, OUTPUT);
@@ -54,9 +56,9 @@ void controlCar(int speed, int turn, int forward)
     speed = speed < 0 ? 0 : speed;
 
     if (turn < 0) {
-        controlMotor(forward, speed, speed-300);
+        controlMotor(forward, speed-SPEED_DIFFERENCE > 50 ? speed-SPEED_DIFFERENCE : 50, speed);
     } else if (turn > 0) {
-        controlMotor(forward, speed-300, speed);
+        controlMotor(forward, speed, speed-SPEED_DIFFERENCE > 50 ? speed-SPEED_DIFFERENCE : 50);
     } else {
         controlMotor(forward, speed, speed);
     }
