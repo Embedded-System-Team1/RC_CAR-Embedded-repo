@@ -4,6 +4,7 @@
 #include <jansson.h> // JSON 처리용 라이브러리
 #include "dc_motor.c" // DC 모터 명령 처리 함수 포함
 #include "horn.c"     // Horn 명령 처리 함수 포함
+#include "auto_light.c" // AutoLight 명령 처리 함수 포함
 
 // -- DC 모터 장치 추가 및 기능 구현 커스텀 예시 --
 // 핸들러 등록 테이블
@@ -49,7 +50,7 @@ void handle_motor_command(int motor_id, const char* message) {
 
 // 핸들러 등록 함수
 void register_custom_device_handler() {
-    wiringPiSetupGpio();
+    wiringPiSetupGpio(); // GPIO 초기화
 
     // DC 모터 핸들러 생성
     MotorHandler dc_motor_handler = {
@@ -64,5 +65,13 @@ void register_custom_device_handler() {
         .parse_message = parse_horn_message,
     };
     register_motor_handler(1, horn_handler); // 모터 ID 1에 등록
-    HornSetup();
+    HornSetup(); // Horn 초기화
+
+    // AutoLight 핸들러 생성
+    MotorHandler auto_light_handler = {
+        .handle_command = handle_auto_light_command,
+        .parse_message = parse_auto_light_message,
+    };
+    register_motor_handler(2, auto_light_handler); // 모터 ID 2에 등록
+    AutoLightSetup(); // 오토라이트 초기화
 }
