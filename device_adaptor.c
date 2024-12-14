@@ -11,6 +11,7 @@
 typedef struct {
     void (*handle_command)(void* command); // 명령 처리 함수
     void* (*parse_message)(const char* message); // 메시지 -> 구조체 변환 함수
+    void (*pin_mapping)();
 } MotorHandler;
 
 
@@ -53,7 +54,8 @@ void handle_motor_command(int motor_id, const char* message) {
 
 
 // 핸들러 등록 함수
-void register_custom_device_handler(){
+void register_custom_device_handler() {
+    wiringPiSetup();
 
     // DC 모터 핸들러 생성
     MotorHandler dc_motor_handler = {
@@ -61,4 +63,7 @@ void register_custom_device_handler(){
         .parse_message = parse_dc_motor_message,
     };
     register_motor_handler(0, dc_motor_handler); // 모터 ID 0에 등록
+    DCMotorSetup();                              // 모터 핀 셋업
+
+
 }
