@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <jansson.h> // JSON 처리용 라이브러리
+#include "device/Horn.c"
 
 // 경적 명령 구조체
 typedef struct {
@@ -63,9 +64,12 @@ void* parse_horn_message(const char* json_str) {
 // 경적 명령 처리 함수
 void handle_horn_command(void* command) {
     HornCommand* horn_command = (HornCommand*)command;
+
     if (horn_command->hornState == 1) {
         printf("Horn ON (ID: %d)\n", horn_command->id);
+        HornOn(440); // 440 Hz 주파수로 경적 울리기 (A4 음)
     } else {
         printf("Horn OFF (ID: %d)\n", horn_command->id);
+        HornOff(); // 경적 끄기
     }
 }
