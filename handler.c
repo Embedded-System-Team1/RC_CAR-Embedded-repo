@@ -9,7 +9,7 @@
 #include <string.h>
 #include <mqueue.h>
 
-#include "handler_mutex.c"
+#include "./server/rc_server.c"
 
 #define BAUD_RATE 115200
 #define MESSAGE_QUEUE_NAME "/rc_car_queue"
@@ -110,12 +110,7 @@ void* thread_bluetooth_connection(void* arg){
 }
 
 void* thread_web_connection() {
-  pid_t pid;
-  char *r_argv[] = {"sudo", "./handler", NULL};
-  if (posix_spawn(&pid, "./rc_server", NULL, NULL, r_argv, environ) != 0) {
-      perror("posix_spawn handler failed");
-      return NULL;
-  }
+  start_server();
 }
 
 
