@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <jansson.h> // JSON 처리용 라이브러리
+#include "device/DCMotor.c"
 
 // DC 모터 명령 구조체
 typedef struct {
@@ -83,8 +84,10 @@ void* parse_dc_motor_message(const char* json_str) {
     return command;
 }
 
+// directionX(왼쪽:-1, 직진:0, 오른쪽: 1), directionY(전진: 0, 후진: 1)
 void handle_dc_motor_command(void* command) {
     DCMotorCommand* dc_command = (DCMotorCommand*)command;
     printf("DC Motor - Speed: %d, Direction: X-%d, Y-%d\n", dc_command->speed, dc_command->directionX, dc_command->directionY);
+    controlCar(dc_command->speed, dc_command->directionX, dc_command->directionY);
 }
 
