@@ -112,32 +112,32 @@ static int callback_server(struct lws *wsi, enum lws_callback_reasons reason, vo
             if (strncmp((char *)in, "FORWARD", len) == 0) {
               char buffer[256];
               updateForwardSpeed();
-              sprintf(buffer, "{\"id\": 0, \"speed\": %d \"directionX\": 0 \"directionY\": 0}\n", speed);
+              sprintf(buffer, "{\"id\": 0, \"speed\": %d, \"directionX\": 0, \"directionY\": 0}\n", speed);
               mq_push(buffer);
             } else if (strncmp((char *)in, "FORWARD_LEFT", len) == 0) {
               char buffer[256];
               updateForwardSpeed();
-              sprintf(buffer, "{\"id\": 0, \"speed\": %d \"directionX\": -1 \"directionY\": 0}\n", speed);
+              sprintf(buffer, "{\"id\": 0, \"speed\": %d, \"directionX\": -1, \"directionY\": 0}\n", speed);
               mq_push(buffer);
             } else if (strncmp((char *)in, "FORWARD_RIGHT", len) == 0) {
               char buffer[256];
               updateForwardSpeed();
-              sprintf(buffer, "{\"id\": 0, \"speed\": %d \"directionX\": 1 \"directionY\": 0}\n", speed);
+              sprintf(buffer, "{\"id\": 0, \"speed\": %d, \"directionX\": 1, \"directionY\": 0}\n", speed);
               mq_push(buffer);
             } else if (strncmp((char *)in, "BACKWARD", len) == 0) {
               char buffer[256];
               updateBackwardSpeed();
-              sprintf(buffer, "{\"id\": 0, \"speed\": %d \"directionX\": 0 \"directionY\": 1}\n", speed);
+              sprintf(buffer, "{\"id\": 0, \"speed\": %d, \"directionX\": 0, \"directionY\": 1}\n", speed);
               mq_push(buffer);
             } else if (strncmp((char *)in, "BACKWARD_LEFT", len) == 0) {
               char buffer[256];
               updateBackwardSpeed();
-              sprintf(buffer, "{\"id\": 0, \"speed\": %d \"directionX\": -1 \"directionY\": 1}\n", speed);
+              sprintf(buffer, "{\"id\": 0, \"speed\": %d, \"directionX\": -1, \"directionY\": 1}\n", speed);
               mq_push(buffer);
             } else if (strncmp((char *)in, "BACKWARD_RIGHT", len) == 0) {
               char buffer[256];
               updateBackwardSpeed();
-              sprintf(buffer, "{\"id\": 0, \"speed\": %d \"directionX\": 1 \"directionY\": 1}\n", speed);
+              sprintf(buffer, "{\"id\": 0, \"speed\": %d, \"directionX\": 1, \"directionY\": 1}\n", speed);
               mq_push(buffer);
             } else if (strncmp((char *)in, "HORN", len) == 0) {
               char buffer[256] = "{\"id\": 1, \"hornState\": 1}\n";
