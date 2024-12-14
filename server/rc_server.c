@@ -71,7 +71,7 @@ int forward = 1;
 
 void updateForwardSpeed() {
   if (forward == 1) {
-    speed++;
+    speed += 10;
     speed = speed > 1024 ? 1024 : speed;
     forward = 1;
   } else {
@@ -82,7 +82,7 @@ void updateForwardSpeed() {
 
 void updateBackwardSpeed() {
   if (forward == 0) {
-    speed++;
+    speed += 10;
     speed = speed > 1024 ? 1024 : speed;
     forward = 0;
   } else {
