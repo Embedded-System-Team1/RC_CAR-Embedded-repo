@@ -47,9 +47,6 @@ void mq_push(char* buffer) {
       return;
   }
 
-   // 메시지 큐 오픈
-  mq = mq_open(MESSAGE_QUEUE_NAME, O_WRONLY);
-
   if(strlen(buffer) > 256) {
       printf("[Handler] data's size is too big\n");
       memset(buffer, 0, sizeof(buffer)); // buf 초기화
@@ -71,22 +68,22 @@ int forward = 1;
 
 void updateForwardSpeed() {
   if (forward == 1) {
-    speed++;
+    speed += 10;
     speed = speed > 1024 ? 1024 : speed;
     forward = 1;
   } else {
-    speed = 0;
+    speed = 400;
     forward = 1;
   }
 }
 
 void updateBackwardSpeed() {
   if (forward == 0) {
-    speed++;
+    speed += 10;
     speed = speed > 1024 ? 1024 : speed;
     forward = 0;
   } else {
-    speed = 0;
+    speed = 400;
     forward = 0;
   }
 }
