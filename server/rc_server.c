@@ -66,6 +66,31 @@ void mq_push(char* buffer) {
   memset(buffer, 0, sizeof(buffer));
 }
 
+int speed = 0;
+int forward = 1;
+
+void updateForwardSpeed() {
+  if (forward == 1) {
+    speed++;
+    speed = speed > 1024 ? 1024 : speed;
+    forward = 1;
+  } else {
+    speed = 0;
+    forward = 1;
+  }
+}
+
+void updateBackwardSpeed() {
+  if (forward == 0) {
+    speed++;
+    speed = speed > 1024 ? 1024 : speed;
+    forward = 0;
+  } else {
+    speed = 0;
+    forward = 0;
+  }
+}
+
 // 클라이언트 메시지 처리 콜백
 static int callback_server(struct lws *wsi, enum lws_callback_reasons reason, void *user, void *in, size_t len) {
     switch (reason) {
@@ -85,37 +110,44 @@ static int callback_server(struct lws *wsi, enum lws_callback_reasons reason, vo
             printf("Received: %.*s\n", (int)len, (char *)in);
 
             if (strncmp((char *)in, "FORWARD", len) == 0) {
-              char buffer[256] = "{\"id\": 1, \"speed\": 51, \"direction\": 1}\n";
+              char buffer[256];
+              updateForwardSpeed();
+              sprintf(buffer, "{\"id\": 0, \"speed\": %d \"directionX\": 0 \"directionY\": 0}\n", speed);
               mq_push(buffer);
             } else if (strncmp((char *)in, "FORWARD_LEFT", len) == 0) {
-              char buffer[256] = "{\"id\": 2, \"speed\": 51, \"direction\": 1}\n";
+              char buffer[256];
+              updateForwardSpeed();
+              sprintf(buffer, "{\"id\": 0, \"speed\": %d \"directionX\": -1 \"directionY\": 0}\n", speed);
               mq_push(buffer);
             } else if (strncmp((char *)in, "FORWARD_RIGHT", len) == 0) {
-              char buffer[256] = "{\"id\": 3, \"speed\": 51, \"direction\": 1}\n";
+              char buffer[256];
+              updateForwardSpeed();
+              sprintf(buffer, "{\"id\": 0, \"speed\": %d \"directionX\": 1 \"directionY\": 0}\n", speed);
               mq_push(buffer);
             } else if (strncmp((char *)in, "BACKWARD", len) == 0) {
-              char buffer[256] = "{\"id\": 4, \"speed\": 51, \"direction\": 1}\n";
+              char buffer[256];
+              updateBackwardSpeed();
+              sprintf(buffer, "{\"id\": 0, \"speed\": %d \"directionX\": 0 \"directionY\": 1}\n", speed);
               mq_push(buffer);
             } else if (strncmp((char *)in, "BACKWARD_LEFT", len) == 0) {
-              char buffer[256] = "{\"id\": 5, \"speed\": 51, \"direction\": 1}\n";
+              char buffer[256];
+              updateBackwardSpeed();
+              sprintf(buffer, "{\"id\": 0, \"speed\": %d \"directionX\": -1 \"directionY\": 1}\n", speed);
               mq_push(buffer);
             } else if (strncmp((char *)in, "BACKWARD_RIGHT", len) == 0) {
-              char buffer[256] = "{\"id\": 6, \"speed\": 51, \"direction\": 1}\n";
-              mq_push(buffer);
-            } else if (strncmp((char *)in, "LEFT", len) == 0) {
-              char buffer[256] = "{\"id\": 7, \"speed\": 51, \"direction\": 1}\n";
-              mq_push(buffer);
-            } else if (strncmp((char *)in, "RIGHT", len) == 0) {
-              char buffer[256] = "{\"id\": 8, \"speed\": 51, \"direction\": 1}\n";
+              char buffer[256];
+              updateBackwardSpeed();
+              sprintf(buffer, "{\"id\": 0, \"speed\": %d \"directionX\": 1 \"directionY\": 1}\n", speed);
               mq_push(buffer);
             } else if (strncmp((char *)in, "HORN", len) == 0) {
-              char buffer[256] = "{\"id\": 9, \"speed\": 51, \"direction\": 1}\n";
+              char buffer[256] = "{\"id\": 1, \"hornState\": 1}\n";
               mq_push(buffer);
             } else if (strncmp((char *)in, "TOGGLE_CEILING", len) == 0) {
               char buffer[256] = "{\"id\": 10, \"speed\": 51, \"direction\": 1}\n";
               mq_push(buffer);
             } else if (strncmp((char *)in, "STOP", len) == 0) {
-              char buffer[256] = "{\"id\": 11, \"speed\": 51, \"direction\": 1}\n";
+              forward = 2;
+              char buffer[256] = "{\"id\": 11, \"speed\": 0, \"direction\": 1}\n";
               mq_push(buffer);
             }
             break;
