@@ -115,7 +115,7 @@ static int callback_server(struct lws *wsi, enum lws_callback_reasons reason, vo
                 speed = 0;
                 forward = 0;
               }
-              sprintf(buffer, "{\"id\": 1, \"speed\": %d \"direction\": 1}\n", speed);
+              sprintf(buffer, "{\"id\": 9, \"speed\": %d \"direction\": 1}\n", speed);
               mq_push(buffer);
             } else if (strncmp((char *)in, "BACKWARD_LEFT", len) == 0) {
               char buffer[256] = "{\"id\": 5, \"speed\": 51, \"direction\": 1}\n";
@@ -130,7 +130,7 @@ static int callback_server(struct lws *wsi, enum lws_callback_reasons reason, vo
               char buffer[256] = "{\"id\": 8, \"speed\": 51, \"direction\": 1}\n";
               mq_push(buffer);
             } else if (strncmp((char *)in, "HORN", len) == 0) {
-              char buffer[256] = "{\"id\": 9, \"speed\": 51, \"direction\": 1}\n";
+              char buffer[256] = "{\"id\": 1, \"hornState\": 1}\n";
               mq_push(buffer);
             } else if (strncmp((char *)in, "TOGGLE_CEILING", len) == 0) {
               char buffer[256] = "{\"id\": 10, \"speed\": 51, \"direction\": 1}\n";
