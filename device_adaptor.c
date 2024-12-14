@@ -49,7 +49,7 @@ void handle_motor_command(int motor_id, const char* message) {
 
 // 핸들러 등록 함수
 void register_custom_device_handler() {
-    wiringPiSetup();
+    wiringPiSetupGpio();
 
     // DC 모터 핸들러 생성
     MotorHandler dc_motor_handler = {

@@ -10,7 +10,6 @@
 // 초기 설정 함수
 void HornSetup() 
 {
-    wiringPiSetupGpio();
     if (softToneCreate(HORN_PIN) != 0) { // SoftTone 초기화
         fprintf(stderr, "[Horn] Failed to initialize softTone on pin %d\n", HORN_PIN);
         return;
