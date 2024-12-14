@@ -10,6 +10,8 @@
 // 초기 설정 함수
 void HornSetup() 
 {
+    wiringPiSetupGpio();
+
     if (softToneCreate(HORN_PIN) != 0) { // SoftTone 초기화
         fprintf(stderr, "[Horn] Failed to initialize softTone on pin %d\n", HORN_PIN);
         return;
@@ -20,13 +22,17 @@ void HornSetup()
 // 주파수를 설정하고 경적을 울리는 함수
 void HornOn(int freq) 
 {
-    if (freq <= 0) {
-        fprintf(stderr, "[Horn] Invalid frequency: %d\n", freq);
-        return;
-    }
+    // WiringPi 라이브러리 초기화
 
-    softToneWrite(HORN_PIN, freq); // 지정된 주파수로 톤 생성
-    printf("[Horn] Horn ON with frequency: %d Hz\n", freq);
+
+    // A4 음을 발생시키기
+    softToneWrite(HORN_PIN, 440);
+
+    // 2초 동안 유지
+    delay(300);
+
+    // 스피커 음 끄기
+    softToneWrite(HORN_PIN, 0);
 }
 
 // 경적을 멈추는 함수
