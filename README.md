@@ -153,13 +153,19 @@ void register_custom_device_handler() { // 구현되어 있는 함수에 다음 
  gcc -o controller controller.c -lpthread -lwiringPi -ljansson
 ```
 
+```bash
+ gcc -o rc_server ./server/rc_server.c -lwebsockets -lrt
+```
+
 #### 실행
 
 ```bash
+gcc -o rc_server ./server/rc_server.c -lwebsockets -lrt
 gcc -o controller controller.c -lpthread -lwiringPi -ljansson
 gcc -o handler handler.c -lpthread -lwiringPi -ljansson
 sudo ./main
 ```
+
 
 ### 👬팀원 소개 및 역할
 
@@ -180,6 +186,19 @@ sudo ./main
       <td>
         전체적인 프로젝트 구성 설계, 제어 소프트웨어와 모터 사이의 파이프라인 개발
       </td>
+   </tr>
+     <tr>
+      <td align="center">
+        <a href="https://github.com/Jinoko01">
+          <img src="https://avatars.githubusercontent.com/u/126740959?v=4" width="100" height="80" alt=""/>
+          <br/>
+          <sub><b>황용진</b></sub>
+        </a>
+      </td>
+      <td>
+        웹과 라즈베리파이 간 웹소켓 통신 구현, RC카 dc모터 조립
+      </td>
+    </tr>
   </table>
 </div>
 <br>
