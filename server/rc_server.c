@@ -75,7 +75,7 @@ void updateForwardSpeed() {
     speed = speed > 1024 ? 1024 : speed;
     forward = 1;
   } else {
-    speed = 0;
+    speed = 400;
     forward = 1;
   }
 }
@@ -86,7 +86,7 @@ void updateBackwardSpeed() {
     speed = speed > 1024 ? 1024 : speed;
     forward = 0;
   } else {
-    speed = 0;
+    speed = 400;
     forward = 0;
   }
 }
