@@ -191,7 +191,7 @@ sudo ./main
         </a>
       </td>
       <td>
-        웹과 라즈베리파이 간 웹소켓 통신 구현, RC카 dc모터 조립
+        웹과 라즈베리파이 간 웹소켓 통신을 위한 웹 플랫폼 개발, RC카 dc모터 조립, RC카와 핸들러간 데이터 통신 테스트 진행
       </td>
    </tr>
    <tr>
@@ -204,6 +204,18 @@ sudo ./main
       </td>
       <td>
         라즈베리파이5와 스마트폰 간 블루투스 통신을 위한 모바일 애플리케이션 개발, 부가 기능 확장
+      </td>
+   </tr>
+     <tr>
+      <td align="center">
+        <a href="https://github.com/jungbk0808">
+          <img src="https://avatars.githubusercontent.com/u/120279225?v=4" width="100" height="80" alt=""/>
+          <br/>
+          <sub><b>정보경</b></sub>
+        </a>
+      </td>
+      <td>
+        RC카와 핸들러간 데이터 통신 테스트 진행
       </td>
    </tr>
   </table>
