@@ -22,6 +22,8 @@
 
 
 ### 🎯범용 RC카 프로젝트 소개
+<img src="https://github.com/user-attachments/assets/37f378a7-bd56-44f7-a687-448247db18c6" alt="RC 카 이미지" width="300px">
+
 
 RC 카의 제어와 기기 추가를 좀 더 확장하기 쉽게 하기 위해 제작되었습니다.
 이 프로젝트는 아래와 같은 목적을 가지고 있습니다:
