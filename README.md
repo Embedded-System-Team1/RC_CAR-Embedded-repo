@@ -22,7 +22,7 @@ RC 카의 제어와 기기 추가를 좀 더 확장하기 쉽게 하기 위해 �
 - **확장성과 안정성 강화**: 프로세스 간 통신과 동시성 제어를 통해 안정적이며 확장 가능한 시스템 구축.
 
 
-### 📊 범용 RC 카 프로젝트 구성도
+### 📊범용 RC 카 프로젝트 구성도
 ![image](https://github.com/user-attachments/assets/81e5fe47-def0-42ed-826a-f32e7bb2c866)
 ----
 1. Controller
@@ -42,7 +42,7 @@ WebSocket API와 Bluetooth 모듈을 통해 사용자가 실시간으로 RC 카�
 
 ---
 
-### 🛠️ 동시성 제어 관련 제한조건 구현 내용
+### 🛠️동시성 제어 관련 제한조건 구현 내용
 ![image](https://github.com/user-attachments/assets/816f6019-7554-4db1-876e-a28754b435e0)
 1. IPC 메시지 큐
    
@@ -70,7 +70,7 @@ WebSocket API와 Bluetooth 모듈을 통해 사용자가 실시간으로 RC 카�
 
 ---
 
-### ✨ 프로젝트 파일 구성
+### ✨프로젝트 파일 구성
 **1. main.c**
    프로그램의 시작점이자 root process
    
@@ -99,7 +99,7 @@ WebSocket API와 Bluetooth 모듈을 통해 사용자가 실시간으로 RC 카�
 
 
 
-## 📝 시스템 커스텀 가이드
+## 📝시스템 커스텀 가이드
 
 ### device 확장 가이드
 
