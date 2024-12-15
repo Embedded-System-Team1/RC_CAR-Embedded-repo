@@ -2,12 +2,9 @@
 #include <string.h>
 #include <stdio.h>
 #include <mqueue.h>
-#include <set>
-#include <string>
 
 #include "../handler_mutex.c"
 
-std::set<std::string> connected_clients; // 연결된 클라이언트 관리
 pthread_mutex_t clients_mutex = PTHREAD_MUTEX_INITIALIZER; // 스레드 안전성 보장
 
 #define MESSAGE_QUEUE_NAME "/rc_car_queue"
@@ -73,22 +70,8 @@ static int callback_server(struct lws *wsi, enum lws_callback_reasons reason, vo
         // 클라이언트가 연결되었을 때
         case LWS_CALLBACK_ESTABLISHED:
             printf("TCP 소켓 연결됨\n");
-            // 클라이언트 IP 가져오기
-            lws_get_peer_simple(wsi, client_ip, sizeof(client_ip));
-            printf("클라이언트 연결 시도: %s\n", client_ip);
 
             pthread_mutex_lock(&mid);
-
-            // 이미 연결된 클라이언트인지 확인
-            if (connected_clients.find(client_ip) != connected_clients.end()) {
-                printf("이미 연결된 클라이언트입니다: %s\n", client_ip);
-                lws_close_reason(wsi, LWS_CLOSE_STATUS_NORMAL, (unsigned char *)"Duplicate connection", 20);
-                pthread_mutex_unlock(&mid);
-                return -1; // 연결 차단
-            }
-
-            // 새 클라이언트 추가
-            connected_clients.insert(client_ip);
             break;
         // 클라이언트 연결이 끊겼을 때
         case LWS_CALLBACK_CLOSED:
