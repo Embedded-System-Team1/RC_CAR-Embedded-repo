@@ -210,8 +210,6 @@ void register_custom_device_handler() { // 구현되어 있는 함수에 다음 
     };
     register_motor_handler(1, servo_motor_handler); // 모터 ID 1에 핸들러 등록
 }
-
-}
 ```
 
 #### 컴파일
@@ -246,7 +244,7 @@ sudo ./main
         </a>
       </td>
       <td>
-        전체적인 프로젝트 구성 설계, 제어 소프트웨어와 모터 사이의 파이프라인 개발 , 동시성 처리 구현
+        전체적인 프로젝트 구성 설계, 제어 소프트웨어와 모터 사이의 파이프라인 개발, 동시성 처리 구현
       </td>
    </tr>
    <tr>
@@ -282,7 +280,7 @@ sudo ./main
         </a>
       </td>
       <td>
-        RC카와 핸들러간 데이터 통신 테스트 진행
+        RC카 전체 조립 및 device 단의 조작 소프트웨어 개발, 부가 기능 확장, RC카와 핸들러간 데이터 통신 테스트 진행
       </td>
    </tr>
   </table>
