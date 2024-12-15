@@ -64,7 +64,8 @@ RC 카의 구동 및 방향 제어
 
 
 ### 📊범용 RC카 프로젝트 구성도
-![image](https://github.com/user-attachments/assets/81e5fe47-def0-42ed-826a-f32e7bb2c866)
+![image](https://github.com/user-attachments/assets/ac4d1f2b-d078-41f9-822e-03cd9b45591d)
+
 ----
 1. Controller
 RC 카의 동작을 제어하며, 현재 등록된 Device 를 제어합니다. Thread Pool을 사용해 병렬 작업을 수행하며, 효율적인 리소스 활용과 빠른 응답성을 보장합니다.
