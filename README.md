@@ -1,3 +1,17 @@
+## ✏️ 목차
+1. [🎯 범용 RC카 프로젝트 소개](#🎯-범용-RC카-프로젝트-소개)
+2. [📊 범용 RC카 프로젝트 구성도](#📊-범용-RC카-프로젝트-구성도)
+3. [🛠️ 동시성 제어 관련 제한조건 구현 내용](#🛠️-동시성-제어-관련-제한조건-구현-내용)
+4. [✨ 프로젝트 파일 구성](#✨-프로젝트-파일-구성)
+5. [📝 시스템 커스텀 가이드](#📝-시스템-커스텀-가이드)
+   - [device 확장 가이드](#device-확장-가이드)
+   - [새로운 모터 타입 추가 방법](#새로운-모터-타입-추가-방법)
+6. [👬 팀원 소개 및 역할](#👬-팀원-소개-및-역할)
+
+
+----
+
+
 ### 🎯범용 RC카 프로젝트 소개
 
 RC 카의 제어와 기기 추가를 좀 더 확장하기 쉽게 하기 위해 제작되었습니다.
@@ -12,7 +26,7 @@ RC 카의 제어와 기기 추가를 좀 더 확장하기 쉽게 하기 위해 �
 ![image](https://github.com/user-attachments/assets/81e5fe47-def0-42ed-826a-f32e7bb2c866)
 ----
 1. Controller
-RC 카의 동작을 제어하며, DC 모터와 서보 모터의 속도 및 방향을 관리합니다. Thread Pool을 사용해 병렬 작업을 수행하며, 효율적인 리소스 활용과 빠른 응답성을 보장합니다.
+RC 카의 동작을 제어하며, 현재 등록된 Device 를 제어합니다. Thread Pool을 사용해 병렬 작업을 수행하며, 효율적인 리소스 활용과 빠른 응답성을 보장합니다.
 
 2. Connection Handler
 외부 입력(Bluetooth, WebSocket, Remote)을 처리하며, 동시 연결 시 경쟁 조건 방지를 위해 Mutex Lock을 사용해 안정성을 보장합니다.
@@ -25,17 +39,38 @@ Controller와 Connection Handler 모두에서 작업을 병렬로 처리하며, 
 
 5. 외부 제어 소프트웨어
 WebSocket API와 Bluetooth 모듈을 통해 사용자가 실시간으로 RC 카를 제어할 수 있습니다.
-----
-동시성 제어
-- Mutex Lock: Connection Handler에서 다중 연결 경쟁 조건 방지를 위해 사용.
-- Thread Pool: 병렬 작업 처리로 자원 소모를 최소화하며 시스템 안정성을 높임.
-- Message Queue: 비동기 메시지 전달로 데이터의 무결성을 유지함.
 
 ---
 
-### 🛠️임베디드 소프트웨어 구성
+### 🛠️ 동시성 제어 관련 제한조건 구현 내용
 ![image](https://github.com/user-attachments/assets/816f6019-7554-4db1-876e-a28754b435e0)
+1. IPC 메시지 큐
+   
+   역할: 프로세스 간 메시지 전달 (Handler → Controller).
+   특징:
+   비동기 데이터 처리
+   안정적 프로세스 통신
 
+2. 쓰레드 풀
+
+   구성:
+   Controller: Device Worker Thread Pool
+   Handler: Connection Worker Thread Pool
+   이유:
+   실시간 처리 강화
+   리소스 효율화 (스레드 재사용) :  Device 제어 이벤트 마다 쓰레드를 생성 및 종료하면 리소스와 성능에 부담이 있어서 프로그램 시작시 쓰레드를 생성하고 재사용하게끔 설계
+   확장성 유지 : 디바이스와 제어 장치가 추가되면 해당 쓰레드를 더 생성하면 됨
+
+3. 커넥션 동기화
+   
+   문제: 커넥션 다중 지원 상황에서 제어 명령에 대한 경쟁 조건이 발생함, 제어 소프트웨어 간에 동기화 필요.
+   해결:
+   Mutex Lock 사용 → 연결 단위 동기화 보장
+
+
+---
+
+### ✨ 프로젝트 파일 구성
 **1. main.c**
    프로그램의 시작점이자 root process
    
@@ -59,21 +94,8 @@ WebSocket API와 Bluetooth 모듈을 통해 사용자가 실시간으로 RC 카�
    device_adaptor 에 제공된 규악을 device 실행 메서드와 구조체 , 문자열 구조체 변환 메서드를 커스텀하면
    해당 device를 실행할 수 있다.
 
-**5. worker thread pool** 
 
-   connection 과 device 제어는 비동기 식 실행을 위해 멀티 스레딩을 채택함
-   장치 제어와 connection 은 real time 으로 작업이 실행되기 때문에 작업 단위마다 thread를 생성-종료 구조는 비적합
-   controller 와 handler 프로세스가 실행될 때 thread 를 생성해놓고 thread pool 로 적재하여 리소스를 효율화 시킴
-
-**6. concurrency control (connection multi thread)**
-
-   connection 끼리 데이터 전송에서 한 메시지 단위로 동기화가 보장되어야 한다.
-   
-   각 connection 의 데이터 전송 transaction 의 동기화를 보장한다.
-   
-   handler.c 에서 mutex_lock 을 이용하여 동기화를 보장한다.
-
- 
+---
 
 
 
@@ -179,7 +201,7 @@ sudo ./main
         </a>
       </td>
       <td>
-        전체적인 프로젝트 구성 설계, 제어 소프트웨어와 모터 사이의 파이프라인 개발
+        전체적인 프로젝트 구성 설계, 제어 소프트웨어와 모터 사이의 파이프라인 개발 , 동시성 처리 구현
       </td>
    </tr>
    <tr>
