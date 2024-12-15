@@ -113,9 +113,11 @@ static int callback_server(struct lws *wsi, enum lws_callback_reasons reason, vo
             } else if (strncmp((char *)in, "END_HORN", len) == 0) {
               char buffer[256] = "{\"id\": 1, \"hornState\": 0}\n";
               mq_push(buffer);
-            } else if (strncmp((char *)in, "TOGGLE_LIGHT", len) == 0) {
-              // TODO: 구조체 만들어지면 고칠 것
-              char buffer[256] = "{\"id\": 2, \"hornState\": 1}\n";
+            } else if (strncmp((char *)in, "ON_AUTO_LIGHT", len) == 0) {
+              char buffer[256] = "{\"id\": 2, \"mode\": 1}\n";
+              mq_push(buffer);
+            } else if (strncmp((char *)in, "OFF_AUTO_LIGHT", len) == 0) {
+              char buffer[256] = "{\"id\": 2, \"mode\": 0}\n";
               mq_push(buffer);
             } else if (strncmp((char *)in, "TOGGLE_CEILING", len) == 0) {
               // TODO: 구조체 만들어지면 고칠 것
