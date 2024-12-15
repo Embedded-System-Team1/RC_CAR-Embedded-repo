@@ -4,10 +4,10 @@
 #include <jansson.h> // JSON 처리용 라이브러리
 #include "device/Ceiling.c"
 
-// Ceiling Servo 메인 메서지 구조체
+// Ceiling Servo 명령 구조체
 typedef struct {
     int id; // 필수 값
-    int ceilingStatus; // 열림 상황 (0: 다지르면, 1: 열리면)
+    int ceilingStatus; // 열림 상황 (0: 닫기, 1: 열기)
 } CeilingServoCommand;
 
 // JSON 문자열을 Ceiling Servo 메서지 구조체로 변환
@@ -27,7 +27,7 @@ void* parse_ceiling_servo_message(const char* json_str) {
         return NULL;
     }
 
-    // 머리 할래
+    // 메모리 할당
     CeilingServoCommand* command = malloc(sizeof(CeilingServoCommand));
     if (!command) {
         fprintf(stderr, "[Parser] Memory allocation failed\n");
@@ -35,7 +35,7 @@ void* parse_ceiling_servo_message(const char* json_str) {
         return NULL;
     }
 
-    // JSON 데이터 추적
+    // JSON 데이터 추출
     json_t* id = json_object_get(root, "id");
     json_t* ceilingStatus = json_object_get(root, "ceilingStatus");
 
@@ -57,11 +57,11 @@ void* parse_ceiling_servo_message(const char* json_str) {
         return NULL;
     }
 
-    json_decref(root); // JSON 머리 해제
+    json_decref(root); // JSON 메모리 해제
     return command;
 }
 
-// ceilingStatus (다지르면: 0, 열리면: 1)
+// ceilingStatus (닫기: 0, 열기: 1)
 void handle_ceiling_servo_command(void* command) {
     CeilingServoCommand* servo_command = (CeilingServoCommand*)command;
     printf("Ceiling Servo - ID: %d, CeilingStatus: %d\n", servo_command->id, servo_command->ceilingStatus);
