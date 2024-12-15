@@ -2,8 +2,10 @@
 #include <string.h>
 #include <stdio.h>
 #include <mqueue.h>
+#include <pthread.h>
 
-#include "../handler_mutex.c"
+pthread_mutex_t mid;
+
 
 pthread_mutex_t clients_mutex = PTHREAD_MUTEX_INITIALIZER; // 스레드 안전성 보장
 
