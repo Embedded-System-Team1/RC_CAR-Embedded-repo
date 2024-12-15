@@ -12,7 +12,7 @@
 static const char *I2C_DEV = "/dev/i2c-1"; // I2C 장치 파일
 
 // GPIO 핀 설정
-#define LED_PIN_1 19 // LED 1
+#define LED_PIN_1 23 // LED 1
 #define LED_PIN_2 24 // LED 2
 
 // 밝기 임계값

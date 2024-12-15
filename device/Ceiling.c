@@ -2,7 +2,7 @@
 #include <wiringPi.h>
 #include <softPwm.h>
 
-#define SERVO 2
+#define SERVO 17
 
 #define SERVO_RANGE 100
 #define ANGLE_TO_MS(angle) (((angle)+90)/90+0.5)
@@ -39,9 +39,7 @@ void stopServo()
 void controlCeilingServo(int openStatus) {
     if (openStatus) {
         rotateServo(90);
-        stopServo();
     } else {
-        rotateServo(-10);
-        stopServo();
+        rotateServo(-11);
     }
 }
